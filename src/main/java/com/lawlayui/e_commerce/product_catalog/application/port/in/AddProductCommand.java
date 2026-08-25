@@ -6,7 +6,7 @@ import com.lawlayui.e_commerce.product_catalog.application.exception.ProductData
 import com.lawlayui.e_commerce.product_catalog.application.exception.ProductLengthException;
 import com.lawlayui.e_commerce.product_catalog.application.exception.ProductPriceZeroException;
 
-public record AddProductCommand(String name, String descirption, BigDecimal price, String file_path) {
+public record AddProductCommand(String name, String descirption, BigDecimal price, String file_path, int initialStock) {
     public AddProductCommand {
         if (name.length() < 3) {
             throw new ProductLengthException(255, 3, "name");
@@ -22,6 +22,12 @@ public record AddProductCommand(String name, String descirption, BigDecimal pric
         }
         if (price.compareTo(BigDecimal.ZERO) == 0) {
             throw new ProductPriceZeroException();
+        }
+        if (file_path.isEmpty()) {
+            throw new ProductDataEmptyException("file_path");
+        }
+        if (initialStock < 0) {
+            throw new ProductDataEmptyException("initialStock");
         }
     }   
 }

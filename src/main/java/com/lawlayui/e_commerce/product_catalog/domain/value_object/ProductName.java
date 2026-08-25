@@ -1,11 +1,9 @@
 package com.lawlayui.e_commerce.product_catalog.domain.value_object;
 
-import com.lawlayui.e_commerce.product_catalog.domain.exception.ProductValueBlankOrEmtpy;
+import java.util.Objects;
 
 public record ProductName(String productName) {
     public ProductName {
-        if (productName.isBlank() || productName.isEmpty()) {
-            throw new ProductValueBlankOrEmtpy("product name");
-        }
+        Objects.requireNonNull(productName, "ProductName cannot be null");
     }
 }
