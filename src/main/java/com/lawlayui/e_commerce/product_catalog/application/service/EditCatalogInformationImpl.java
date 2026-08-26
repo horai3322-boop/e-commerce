@@ -1,5 +1,7 @@
 package com.lawlayui.e_commerce.product_catalog.application.service;
 
+import org.springframework.stereotype.Service;
+
 import com.lawlayui.e_commerce.product_catalog.application.event.ProductPhotoChangedEvent;
 import com.lawlayui.e_commerce.product_catalog.application.exception.ProductNotFoundException;
 import com.lawlayui.e_commerce.product_catalog.application.port.in.EditCatalogInformationCommand;
@@ -13,11 +15,12 @@ import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductName;
 import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductPhoto;
 import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductPrice;
 
-public class EditProductDetailsImpl implements EditCatalogInformationUseCase {
+@Service
+public class EditCatalogInformationImpl implements EditCatalogInformationUseCase {
     private final ProductCatalogRepository productRepository;
     private final EventPublisher eventPublisher;    
 
-    public EditProductDetailsImpl(ProductCatalogRepository productRepository, EventPublisher eventPublisher) {
+    public EditCatalogInformationImpl(ProductCatalogRepository productRepository, EventPublisher eventPublisher) {
         this.productRepository = productRepository;
         this.eventPublisher = eventPublisher;
     }
