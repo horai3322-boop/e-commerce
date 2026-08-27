@@ -4,17 +4,18 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
-
+import org.springframework.stereotype.Repository;
 
 import com.lawlayui.e_commerce.product_catalog.application.port.out.ProductCatalogRepository;
 import com.lawlayui.e_commerce.product_catalog.domain.model.Product;
 import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductId;
 
+@Repository
 public class JpaProductCatalogRepository implements ProductCatalogRepository {
     private final JpaProductCatalogEntityRepository jpaRepository;
-    private final ProductMapping productMapping;
+    private final ProductPersistentMapper productMapping;
 
-    public JpaProductCatalogRepository(JpaProductCatalogEntityRepository jpaRepository, ProductMapping productMapping) {
+    public JpaProductCatalogRepository(JpaProductCatalogEntityRepository jpaRepository, ProductPersistentMapper productMapping) {
         this.jpaRepository = jpaRepository;
         this.productMapping = productMapping;
     }

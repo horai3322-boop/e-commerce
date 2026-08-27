@@ -12,15 +12,15 @@ import jakarta.persistence.Table;
 public class ProductCatalogJpaEntity {
     @Id
     private String productId;
-    @Column(name = "product_name", nullable = false, length = 255)
+    @Column(name = "name", nullable = false, length = 255)
     private String productName;
-    @Column(name = "product_photo", length = 500)
+    @Column(name = "photo", length = 500)
     private String productPhoto;
-    @Column(name = "product_description", nullable = false, length = 1000)
+    @Column(name = "description", nullable = false, length = 1000)
     private String productDescription;
-    @Column(name = "product_price", nullable = false, precision = 19, scale = 4)
+    @Column(name = "price", nullable = false, precision = 19, scale = 4)
     private BigDecimal productPrice;
-    @Column(name = "status", nullable = false, length = 20)
+    @Column(name = "status", nullable = false, length = 50)
     private String status;
     public ProductCatalogJpaEntity(String productId, String productName, String productPhoto, String productDescription,
             BigDecimal productPrice, String status) {

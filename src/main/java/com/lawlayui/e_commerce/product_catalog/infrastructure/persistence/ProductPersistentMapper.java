@@ -14,7 +14,7 @@ import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductPhoto;
 import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductPrice;
 
 @Mapper(componentModel = "spring")
-public interface ProductMapping {
+public interface ProductPersistentMapper {
     @Mapping(source = "productId", target = "productId", qualifiedByName = "mapProductIdToString")
     @Mapping(source = "productName", target = "productName", qualifiedByName = "mapProductNameToString")
     @Mapping(source = "productDescription", target = "productDescription", qualifiedByName = "mapProductDescriptionToString")
