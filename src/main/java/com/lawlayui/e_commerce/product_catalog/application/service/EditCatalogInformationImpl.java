@@ -44,14 +44,7 @@ public class EditCatalogInformationImpl implements EditCatalogInformationUseCase
             product.changeProductPhoto(new ProductPhoto(command.filePath()));
             eventPublisher.publish(new ProductPhotoChangedEvent(product.getProductId().id(), oldPhoto, command.filePath()));
         }
-        if (command.filePath() == null ) {
-            String oldPhoto = product.getProductPhoto().filePath();
-            product.changeProductPhoto(new ProductPhoto(command.filePath()));
-            eventPublisher.publish(new ProductPhotoChangedEvent(product.getProductId().id(), oldPhoto, command.filePath()));
-        }
-        else {
-            return;
-        }
+
         productRepository.save(product);
     }
 }

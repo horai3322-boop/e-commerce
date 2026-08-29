@@ -80,10 +80,10 @@ public class Product {
     }
 
     public void changeProductPrice(ProductPrice productPrice) {
+        Objects.requireNonNull(productPrice, "ProductPrice cannot be null");
         if (productPrice.price().compareTo(BigDecimal.ZERO) == 0) {
             throw new IllegalArgumentException("Product price cannot be zero");
         }
-        Objects.requireNonNull(productPrice, "ProductPrice cannot be null");
         this.productPrice = productPrice;
     }
 
