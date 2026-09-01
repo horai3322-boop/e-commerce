@@ -42,7 +42,7 @@ public class InventoryItem {
         this.locationCode = newLocationCode;
     }
 
-    public void deductStock(StockQuantitiy quantityToDeduct) {
+    public void deductReservedStock(StockQuantitiy quantityToDeduct) {
         if (quantityToDeduct == null) {
             throw new IllegalArgumentException("Quantity to deduct cannot be null");
         }
