@@ -88,7 +88,7 @@ public class InventoryItem {
         return sku;
     }
 
-    public StockQuantitiy getAvaliableStock() {
+    public StockQuantitiy getAvailableStock() {
         return avaliableStock;
     }
 
