@@ -28,7 +28,7 @@ public class RemoveProductUseCaseImpl implements RemoveProductUseCase {
             .orElseThrow(() -> new ProductNotFoundException(command.productId()));
 
         product.remove();
-        eventPublisher.publish(new ProductRemovedEvent(command.productId()));
+        eventPublisher.publish(new ProductRemovedEvent(product.getProductSku().value(), product.getStatus().name()));
     }
     
 }

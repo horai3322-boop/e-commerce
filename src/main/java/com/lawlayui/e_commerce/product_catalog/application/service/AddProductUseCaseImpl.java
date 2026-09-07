@@ -32,11 +32,12 @@ public class AddProductUseCaseImpl implements AddProductUseCase {
             new ProductPhoto(command.file_path()),
             new ProductDescription(command.descirption()),
             new ProductPrice(command.price()),
-            command.initialStock()
+            0,
+            new ProductSku(command.sku())
         );
 
         productRepository.save(product);
-        eventPublisher.publish(new ProductCreatedEvent(product.getProductId().id(), command.initialStock()));
+        eventPublisher.publish(new ProductCreatedEvent(product.getProductSku().value()));
         return productMapping.toDto(product);
     }
     

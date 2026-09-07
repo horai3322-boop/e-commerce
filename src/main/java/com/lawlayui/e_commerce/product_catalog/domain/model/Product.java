@@ -8,6 +8,7 @@ import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductId;
 import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductName;
 import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductPhoto;
 import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductPrice;
+import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductSku;
 import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductStatus;
 
 
@@ -17,6 +18,7 @@ public class Product {
     private ProductPhoto productPhoto;
     private ProductDescription productDescription;
     private ProductPrice productPrice; 
+    private ProductSku productSku;
     private ProductStatus status;
     private boolean hasTransactionHistory;
 
@@ -26,7 +28,8 @@ public class Product {
         ProductPhoto photo,
         ProductDescription description,
         ProductPrice price,
-        int initialStock
+        int initialStock,
+        ProductSku productSku
     ) {
         Product product = new Product();
         product.productId = Objects.requireNonNull(productId, "ProductId cannot be null");
@@ -34,6 +37,7 @@ public class Product {
         product.productPhoto = Objects.requireNonNull(photo, "ProductPhoto cannot be null");
         product.productDescription = Objects.requireNonNull(description, "ProductDescription cannot be null");
         product.productPrice = Objects.requireNonNull(price, "ProductPrice cannot be null");
+        product.productSku = Objects.requireNonNull(productSku, "ProductSku cannot be null");
 
         product.status = (initialStock > 0) ? ProductStatus.AVALIABLE : ProductStatus.NOT_AVALIABLE;
 
@@ -87,9 +91,8 @@ public class Product {
         this.productPrice = productPrice;
     }
 
-    public void changeStatus(ProductStatus status) {
-        Objects.requireNonNull(status, "Status cannot be null");
-        this.status = status;
+    public void changeStatus(int stock) {
+        this.status = (stock > 0) ? ProductStatus.AVALIABLE : ProductStatus.NOT_AVALIABLE;
     }
 
     public ProductId getProductId() {return productId;}
@@ -98,4 +101,5 @@ public class Product {
     public ProductPrice getProductPrice() {return productPrice;}
     public ProductPhoto getProductPhoto() {return productPhoto;}
     public ProductStatus getStatus() {return status;}
+    public ProductSku getProductSku() {return productSku;}
 }

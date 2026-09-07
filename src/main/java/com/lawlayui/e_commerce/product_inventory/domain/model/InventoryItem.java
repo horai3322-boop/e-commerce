@@ -9,11 +9,11 @@ import com.lawlayui.e_commerce.product_inventory.domain.exception.*;
 public class InventoryItem {
     private InventoryItemId id;
     private SKU sku;
-    private StockQuantitiy avaliableStock;
+    private StockQuantitiy availableStock;
     private StockQuantitiy reservedStock;
     private LocationCode locationCode;
 
-    public static InventoryItem create(InventoryItemId id, SKU sku, StockQuantitiy avaliableStock, LocationCode locationCode) {
+    public static InventoryItem create(InventoryItemId id, SKU sku, StockQuantitiy availableStock, LocationCode locationCode) {
         InventoryItem inventoryItem = new InventoryItem();
         if (id == null) {
             throw new IllegalArgumentException("InventoryItemId cannot be null");
@@ -21,7 +21,7 @@ public class InventoryItem {
         if (sku == null) {
             throw new IllegalArgumentException("SKU cannot be null");
         }
-        if (avaliableStock == null) {
+        if (availableStock == null) {
             throw new IllegalArgumentException("StockQuantity cannot be null");
         }
         if (locationCode == null) {
@@ -29,7 +29,7 @@ public class InventoryItem {
         }
         inventoryItem.id = id;
         inventoryItem.sku = sku;
-        inventoryItem.avaliableStock = avaliableStock;
+        inventoryItem.availableStock = availableStock;
         inventoryItem.locationCode = locationCode;
         inventoryItem.reservedStock = new StockQuantitiy(0);
         return inventoryItem;
@@ -56,17 +56,17 @@ public class InventoryItem {
         if (quantityToReplenish == null) {
             throw new IllegalArgumentException("Quantity to replenish cannot be null");
         }
-        this.avaliableStock = new StockQuantitiy(this.avaliableStock.value() + quantityToReplenish.value());
+        this.availableStock = new StockQuantitiy(this.availableStock.value() + quantityToReplenish.value());
     }
 
     public void reserveStock(StockQuantitiy quantityToReserve) {
         if (quantityToReserve == null) {
             throw new IllegalArgumentException("Quantity to reserve cannot be null");
         }
-        if (this.avaliableStock.value() < quantityToReserve.value()) {
+        if (this.availableStock.value() < quantityToReserve.value()) {
             throw new InsufficientStockException();
         }
-        this.avaliableStock = new StockQuantitiy(this.avaliableStock.value() - quantityToReserve.value());
+        this.availableStock = new StockQuantitiy(this.availableStock.value() - quantityToReserve.value());
         this.reservedStock = new StockQuantitiy(this.reservedStock.value() + quantityToReserve.value());
     }
 
@@ -78,7 +78,7 @@ public class InventoryItem {
             throw new InsufficientStockException();
         }
         this.reservedStock = new StockQuantitiy(this.reservedStock.value() - quantityToRelease.value());
-        this.avaliableStock = new StockQuantitiy(this.avaliableStock.value() + quantityToRelease.value());
+        this.availableStock = new StockQuantitiy(this.availableStock.value() + quantityToRelease.value());
     }
     public InventoryItemId getId() {
         return id;
@@ -89,7 +89,7 @@ public class InventoryItem {
     }
 
     public StockQuantitiy getAvailableStock() {
-        return avaliableStock;
+        return availableStock;
     }
 
     public StockQuantitiy getReservedStock() {

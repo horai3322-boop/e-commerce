@@ -38,6 +38,12 @@ public class JpaProductCatalogRepository implements ProductCatalogRepository {
     }
 
     @Override
+    public Optional<Product> getBySku(String sku) {
+        Optional<ProductCatalogJpaEntity> entity = jpaRepository.findByProductSku(sku);
+        return entity.map(productMapping::toDomain);
+    }
+
+    @Override
     public Product save(Product product) {
         ProductCatalogJpaEntity entity = productMapping.toEntity(product);
         ProductCatalogJpaEntity savedEntity = jpaRepository.save(entity);

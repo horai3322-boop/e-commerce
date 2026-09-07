@@ -56,7 +56,7 @@ class InventoryItemTest {
 
             assertEquals(id, item.getId());
             assertEquals(sku, item.getSku());
-            assertEquals(initialStock.value(), item.getAvaliableStock().value());
+            assertEquals(initialStock.value(), item.getAvailableStock().value());
             assertEquals(locationCode, item.getLocationCode());
             assertEquals(0, item.getReservedStock().value());
         }
@@ -137,7 +137,7 @@ class InventoryItemTest {
 
             item.reserveStock(new StockQuantitiy(30));
 
-            assertEquals(70, item.getAvaliableStock().value());
+            assertEquals(70, item.getAvailableStock().value());
             assertEquals(30, item.getReservedStock().value());
         }
 
@@ -149,7 +149,7 @@ class InventoryItemTest {
             assertThrows(InsufficientStockException.class,
                     () -> item.reserveStock(new StockQuantitiy(11)));
             // pastikan state tidak berubah setelah exception
-            assertEquals(10, item.getAvaliableStock().value());
+            assertEquals(10, item.getAvailableStock().value());
             assertEquals(0, item.getReservedStock().value());
         }
 
@@ -165,10 +165,10 @@ class InventoryItemTest {
     }
 
     // ---------------------------------------------------------------
-    // deductStock()
+    // deductReservedStock()
     // ---------------------------------------------------------------
     @Nested
-    @DisplayName("deductStock()")
+    @DisplayName("deductReservedStock()")
     class DeductStock {
 
         @Test
@@ -177,11 +177,11 @@ class InventoryItemTest {
             InventoryItem item = InventoryItem.create(id, sku, initialStock, locationCode);
             item.reserveStock(new StockQuantitiy(50));
 
-            item.deductStock(new StockQuantitiy(20));
+            item.deductReservedStock(new StockQuantitiy(20));
 
             assertEquals(30, item.getReservedStock().value());
-            // availableStock tidak berubah oleh deductStock
-            assertEquals(50, item.getAvaliableStock().value());
+            // availableStock tidak berubah oleh deductReservedStock
+            assertEquals(50, item.getAvailableStock().value());
         }
 
         @Test
@@ -191,7 +191,7 @@ class InventoryItemTest {
             item.reserveStock(new StockQuantitiy(10));
 
             assertThrows(InsufficientStockException.class,
-                    () -> item.deductStock(new StockQuantitiy(11)));
+                    () -> item.deductReservedStock(new StockQuantitiy(11)));
             assertEquals(10, item.getReservedStock().value());
         }
 
@@ -201,7 +201,7 @@ class InventoryItemTest {
             InventoryItem item = InventoryItem.create(id, sku, initialStock, locationCode);
 
             IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-                    () -> item.deductStock(null));
+                    () -> item.deductReservedStock(null));
             assertEquals("Quantity to deduct cannot be null", ex.getMessage());
         }
     }
@@ -220,7 +220,7 @@ class InventoryItemTest {
 
             item.replenishStock(new StockQuantitiy(25));
 
-            assertEquals(125, item.getAvaliableStock().value());
+            assertEquals(125, item.getAvailableStock().value());
         }
 
         @Test
@@ -250,7 +250,7 @@ class InventoryItemTest {
             item.releaseReservedStock(new StockQuantitiy(15));
 
             assertEquals(25, item.getReservedStock().value());
-            assertEquals(75, item.getAvaliableStock().value());
+            assertEquals(75, item.getAvailableStock().value());
         }
 
         @Test
@@ -262,7 +262,7 @@ class InventoryItemTest {
             assertThrows(InsufficientStockException.class,
                     () -> item.releaseReservedStock(new StockQuantitiy(6)));
             assertEquals(5, item.getReservedStock().value());
-            assertEquals(95, item.getAvaliableStock().value());
+            assertEquals(95, item.getAvailableStock().value());
         }
 
         @Test
@@ -285,10 +285,10 @@ class InventoryItemTest {
         InventoryItem item = InventoryItem.create(id, sku, new StockQuantitiy(50), locationCode);
 
         item.reserveStock(new StockQuantitiy(20));   // available 30, reserved 20
-        item.deductStock(new StockQuantitiy(20));    // available 30, reserved 0 (terjual habis)
+        item.deductReservedStock(new StockQuantitiy(20));    // available 30, reserved 0 (terjual habis)
         item.replenishStock(new StockQuantitiy(10)); // available 40, reserved 0
 
-        assertEquals(40, item.getAvaliableStock().value());
+        assertEquals(40, item.getAvailableStock().value());
         assertEquals(0, item.getReservedStock().value());
     }
 

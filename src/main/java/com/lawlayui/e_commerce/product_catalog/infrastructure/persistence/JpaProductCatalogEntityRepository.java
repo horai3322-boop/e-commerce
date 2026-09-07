@@ -1,5 +1,7 @@
 package com.lawlayui.e_commerce.product_catalog.infrastructure.persistence;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +14,6 @@ public interface JpaProductCatalogEntityRepository extends JpaRepository<Product
        "LOWER(p.productDescription) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
        "LOWER(p.status) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<ProductCatalogJpaEntity> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    Optional<ProductCatalogJpaEntity> findByProductSku(String sku);
 }
