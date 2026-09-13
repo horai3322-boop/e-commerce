@@ -4,7 +4,6 @@ import java.util.Objects;
 import java.math.BigDecimal;
 
 import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductDescription;
-import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductId;
 import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductName;
 import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductPhoto;
 import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductPrice;
@@ -13,7 +12,6 @@ import com.lawlayui.e_commerce.product_catalog.domain.value_object.ProductStatus
 
 
 public class Product {
-    private ProductId productId;
     private ProductName productName;
     private ProductPhoto productPhoto;
     private ProductDescription productDescription;
@@ -21,9 +19,27 @@ public class Product {
     private ProductSku productSku;
     private ProductStatus status;
     private boolean hasTransactionHistory;
+    
+
+    public Product(){};
+
+    public Product(
+        ProductName productName,
+        ProductDescription productDescription,
+        ProductPhoto productPhoto,
+        ProductPrice productPrice,
+        ProductSku productSku,
+        ProductStatus status
+    ) {
+        this.productName = productName;
+        this.productDescription = productDescription;
+        this.productPhoto = productPhoto;
+        this.productPrice = productPrice;
+        this.productSku = productSku;
+        this.status = status;
+    }
 
     public static Product create(
-        ProductId productId,
         ProductName name,
         ProductPhoto photo,
         ProductDescription description,
@@ -32,7 +48,6 @@ public class Product {
         ProductSku productSku
     ) {
         Product product = new Product();
-        product.productId = Objects.requireNonNull(productId, "ProductId cannot be null");
         product.productName = Objects.requireNonNull(name, "ProductName cannot be null");
         product.productPhoto = Objects.requireNonNull(photo, "ProductPhoto cannot be null");
         product.productDescription = Objects.requireNonNull(description, "ProductDescription cannot be null");
@@ -95,7 +110,6 @@ public class Product {
         this.status = (stock > 0) ? ProductStatus.AVALIABLE : ProductStatus.NOT_AVALIABLE;
     }
 
-    public ProductId getProductId() {return productId;}
     public ProductName getProductName() {return productName;}
     public ProductDescription getProductDescription() {return productDescription;}
     public ProductPrice getProductPrice() {return productPrice;}

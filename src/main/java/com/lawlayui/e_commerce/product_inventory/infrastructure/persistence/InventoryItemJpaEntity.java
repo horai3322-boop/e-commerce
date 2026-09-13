@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 @Table(name="inventory_items")
 @Entity
 public class InventoryItemJpaEntity {
+    public InventoryItemJpaEntity() {}
     public InventoryItemJpaEntity(String id, String sku, int availableStock, int reservedStock, String locationCode) {
         this.id = id;
         this.sku = sku;
@@ -47,11 +48,11 @@ public class InventoryItemJpaEntity {
     }
     @Id 
     private String id;
-    @Column(nullable = false, unique = true, length = 36)
+    @Column(nullable = false, unique = true, length = 255)
     private String sku;
-    @Column(name = "available_stock", nullable = false)
+    @Column(name = "available_quantity", nullable = false)
     private int availableStock;
-    @Column(name = "reserved_stock", nullable = false)
+    @Column(name = "reserved_quantity", nullable = false)
     private int reservedStock;
     @Column(name = "location_code", nullable = false)
     private String locationCode;

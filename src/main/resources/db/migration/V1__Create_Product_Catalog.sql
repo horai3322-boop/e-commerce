@@ -1,5 +1,5 @@
 create table if not EXISTS catalog_products (
-    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    sku VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
     status VARCHAR(50) NOT NULL,

@@ -15,65 +15,59 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawlayui.e_commerce.product_catalog.application.port.in.AddProductCommand;
-import com.lawlayui.e_commerce.product_catalog.application.port.in.AddProductUseCase;
 import com.lawlayui.e_commerce.product_catalog.application.port.in.EditCatalogInformationCommand;
-import com.lawlayui.e_commerce.product_catalog.application.port.in.EditCatalogInformationUseCase;
-import com.lawlayui.e_commerce.product_catalog.application.port.in.GetProductByIdQuery;
-import com.lawlayui.e_commerce.product_catalog.application.port.in.GetProductByIdUseCase;
+import com.lawlayui.e_commerce.product_catalog.application.port.in.GetProductBySkuQuery;
 import com.lawlayui.e_commerce.product_catalog.application.port.in.ProductDto;
-import com.lawlayui.e_commerce.product_catalog.application.port.in.RemoveProductCommand;
-import com.lawlayui.e_commerce.product_catalog.application.port.in.RemoveProductUseCase;
+import com.lawlayui.e_commerce.product_catalog.application.port.in.RemoveProductBySkuCommand;
 import com.lawlayui.e_commerce.product_catalog.application.port.in.SearchProductQuery;
-import com.lawlayui.e_commerce.product_catalog.application.port.in.SearchProductUseCase;
+import com.lawlayui.e_commerce.product_catalog.application.service.CatalogServicesAdapter;
 
 @RestController
-@RequestMapping("/api/v1/product-catalog")
+@RequestMapping("/api/v1/products")
 public class ProductCatalogController {
-    private final AddProductUseCase addProductUseCase;
-    private final EditCatalogInformationUseCase editCatalogInformationUseCase;
-    private final GetProductByIdUseCase getProductByIdUseCase;
-    private final RemoveProductUseCase removeProductUseCase;
-    private final SearchProductUseCase searchProductUseCase;
 
-    public ProductCatalogController(AddProductUseCase addProductUseCase, EditCatalogInformationUseCase editCatalogInformationUseCase, GetProductByIdUseCase getProductByIdUseCase, RemoveProductUseCase removeProductUseCase, SearchProductUseCase searchProductUseCase) {
-        this.addProductUseCase = addProductUseCase;
-        this.editCatalogInformationUseCase = editCatalogInformationUseCase;
-        this.getProductByIdUseCase = getProductByIdUseCase;
-        this.removeProductUseCase = removeProductUseCase;
-        this.searchProductUseCase = searchProductUseCase;
+    private final CatalogServicesAdapter catalogServicesAdapter;
+
+    public ProductCatalogController(CatalogServicesAdapter catalogServicesAdapter) {
+        this.catalogServicesAdapter = catalogServicesAdapter;
     }
 
     @GetMapping
     public ResponseEntity<List<ProductDto>> search(@RequestParam(defaultValue = "0") int page,
                                                    @RequestParam(defaultValue = "10") int pageSize,
-                                                   @RequestParam(defaultValue = "") String searchKey) {
-        List<ProductDto> products = searchProductUseCase.execute(new SearchProductQuery(page, pageSize, searchKey));
+                                                   @RequestParam(defaultValue = "") String q) {
+        List<ProductDto> products = catalogServicesAdapter.searchProductUseCase(new SearchProductQuery(page, pageSize, q));
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/{productId}")
-    public ResponseEntity<ProductDto> getById(@PathVariable String productId) {
-        ProductDto product = getProductByIdUseCase.execute(new GetProductByIdQuery(productId));
-        return ResponseEntity.ok(product);
+    @GetMapping("/{sku}")
+    public ResponseEntity<ProductDto> getBySku(@PathVariable String sku) {
+        ProductDto productDto = catalogServicesAdapter.getProductBySkuUseCase(new GetProductBySkuQuery(sku));
+        return ResponseEntity.ok(productDto);
     }
 
-    @PostMapping
-    public ResponseEntity<ProductDto> addProduct(@RequestBody AddProductCommand productDto) {
-        ProductDto product = addProductUseCase.execute(productDto);
-        return ResponseEntity.ok(product);
+    @DeleteMapping("/{sku}")
+    public ResponseEntity<?> removeBySku(@PathVariable String sku) {
+        catalogServicesAdapter.removeProductBySkuUseCase(new RemoveProductBySkuCommand(sku));
+        return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{productId}")
-    public ResponseEntity<?> editProduct(@PathVariable String productId, @RequestBody EditCatalogInformationCommand editCatalogInformationCommand) {
-        EditCatalogInformationCommand command = new EditCatalogInformationCommand(productId, editCatalogInformationCommand.name(), editCatalogInformationCommand.description(), editCatalogInformationCommand.filePath(),editCatalogInformationCommand.price());
-
-        editCatalogInformationUseCase.execute(command);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    @PostMapping 
+    public ResponseEntity<ProductDto> addProduct(@RequestBody AddProductCommand command) {
+        return ResponseEntity.ok(catalogServicesAdapter.addProductUseCase(command));
     }
 
-    @DeleteMapping("/{productId}")
-    public ResponseEntity<?> removeProduct(@PathVariable String productId) {
-        removeProductUseCase.execute(new RemoveProductCommand(productId));
+    @PatchMapping("/{sku}")
+    public ResponseEntity<?> editProduct(@PathVariable("sku") String sku, @RequestBody EditCatalogInformationCommand editCatalogInformationCommand) {
+
+        EditCatalogInformationCommand command = new EditCatalogInformationCommand(
+            sku, 
+            editCatalogInformationCommand.name(), 
+            editCatalogInformationCommand.description(), 
+            editCatalogInformationCommand.photo(), 
+        editCatalogInformationCommand.price());
+
+        catalogServicesAdapter.editCatalogInformationUseCase(command);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import com.lawlayui.e_commerce.product_catalog.application.event.ProductCreatedEvent;
 import com.lawlayui.e_commerce.product_catalog.application.mapper.ProductMapping;
 import com.lawlayui.e_commerce.product_catalog.application.port.in.AddProductCommand;
-import com.lawlayui.e_commerce.product_catalog.application.port.in.AddProductUseCase;
 import com.lawlayui.e_commerce.product_catalog.application.port.in.ProductDto;
 import com.lawlayui.e_commerce.product_catalog.application.port.out.EventPublisher;
 import com.lawlayui.e_commerce.product_catalog.application.port.out.ProductCatalogRepository;
@@ -13,24 +12,22 @@ import com.lawlayui.e_commerce.product_catalog.domain.model.Product;
 import com.lawlayui.e_commerce.product_catalog.domain.value_object.*;;
 
 @Service
-public class AddProductUseCaseImpl implements AddProductUseCase {
+public class AddProductUseCase{
     private final ProductCatalogRepository productRepository;
     private final ProductMapping productMapping;
     private final EventPublisher eventPublisher;
 
-    public AddProductUseCaseImpl(ProductCatalogRepository productRepository, ProductMapping mapping, EventPublisher eventPublisher) {
+    public AddProductUseCase(ProductCatalogRepository productRepository, ProductMapping mapping, EventPublisher eventPublisher) {
         this.productRepository = productRepository;
         this.productMapping = mapping;
         this.eventPublisher = eventPublisher;
     }
 
-    @Override
     public ProductDto execute(AddProductCommand command) {
         Product product = Product.create(
-            ProductId.generateId(),
             new ProductName(command.name()),
-            new ProductPhoto(command.file_path()),
-            new ProductDescription(command.descirption()),
+            new ProductPhoto(command.photo()),
+            new ProductDescription(command.description()),
             new ProductPrice(command.price()),
             0,
             new ProductSku(command.sku())

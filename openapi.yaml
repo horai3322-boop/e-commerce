@@ -1,0 +1,255 @@
+openapi: 3.0.3
+info: 
+  title: E-commerce API 
+  description: This is an e-commerce API that can be used to manage products or perform transactions to purchase products.
+  version: 1.0.0
+  contact: 
+    name: Lawlayui
+    email: lawlayui@gmail.com
+
+servers: 
+  - url: http://localhost:8080
+    description: Server local 
+
+paths:
+  /api/v1/products:
+    get: 
+      summary: Get a list of products.
+      description: Retrieves a list of products based on the submitted query and supports pagination.
+      operationId: SearchProducts
+      parameters:
+        - name: page
+          in: query
+          description: Page of retrieved data
+          required: false
+          schema: 
+            type: integer 
+            default: 0
+            example: 1
+
+        - name: pageSize
+          in: query
+          description: Number of data items per page
+          required: false
+          schema: 
+            type: integer
+            default: 10
+            example: 20
+
+        - name: q
+          in: query
+          description: Keywords for performing a search
+          required: true
+          schema: 
+            type: string
+            example: Laptop for gaming and programming
+      responses:
+        '200': 
+          description: Successfully retrieved product data.
+          content: 
+            application/json:
+              schema: 
+                type: array 
+                items: 
+                  $ref: '#/components/schemas/CatalogProductResponse' 
+
+    post:
+      summary: Create new product 
+      operationId: AddProduct
+      security: 
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/AddProductRequest'
+      responses: 
+        '201': 
+          description: Create new product success 
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/CatalogProductResponse'
+
+        '400':
+          description: Invalid format
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  
+  /api/v1/products/{sku}:
+    get:
+      summary: Retrieve a product using the SKU.
+      description: Obtaining a specific product.
+      operationId: getProductsBySku
+      parameters: 
+        - name: sku
+          in: path 
+          required: true 
+          description: Unique product SKU code 
+          schema: 
+            type: string 
+            example: KMJ-ZAR-HTM-L 
+      responses: 
+        '200':
+          description: Success get product 
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/CatalogProductResponse'
+        '404':
+          description: Product not found 
+          content: 
+            application/json: 
+              schema:  
+                $ref: '#/components/schemas/ErrorResponse'
+    patch: 
+      summary: Edit catalog information 
+      operationId: EditCatalogInformation 
+      parameters:
+        - name: sku 
+          in: path
+          required: true 
+          description: Unique product SKU code  
+          schema: 
+            type: string 
+            example: KMJ-ZAR-HTM-L
+      security: 
+        - BearerAuth: []
+      requestBody: 
+        required: true 
+        content: 
+          application/json: 
+            schema:    
+              $ref: '#/components/schemas/EditCatalogInformationRequest'
+      responses: 
+        '204':
+          description: Success edit catalog information 
+
+        '400':
+          description: Invalid format
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete: 
+      summary: Delete a product by SKU 
+      operationId: deleteProductBySku
+      parameters: 
+        - name: sku 
+          in: path 
+          required: true 
+          description: Unique product SKU code 
+          schema: 
+            type: string 
+            example: KMJ-ZAR-HTM-L
+      responses:
+        '204':
+          description: Success deleted product 
+        '404':
+          description: Product not found 
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    AddProductRequest:
+      type: object 
+      required: 
+        - name
+        - description 
+        - price
+        - photo 
+        - sku
+      properties: 
+        name:  
+          type: string 
+          minLength: 3
+          maxLength: 255
+          example: laptop 
+        description: 
+          type: string 
+          minLength: 50
+          maxLength: 1000
+          example: laptop gaming 
+        price: 
+          type: number
+          minimum: 0.01
+          format: double 
+          example: 12.12 
+        photo: 
+          type: string 
+          example: "/api/v1/assets/{sku}"
+        sku: 
+          type: string 
+          example: KMJ-ZAR-HTM-L
+
+    ErrorResponse: 
+      type: object
+      properties: 
+        errorCode: 
+          type: number
+          example: 400
+        errorMessage:
+          type: string
+          example: The minimum number of characters required is 3.
+
+    EditCatalogInformationRequest:
+      type: object
+      properties: 
+        name:  
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: Laptop Gaming Pro
+        description: 
+          type: string
+          minLength: 50
+          maxLength: 1000
+          example: Laptop gaming dengan performa tinggi cocok untuk pekerjaan berat dan rendering video.
+        photo: 
+          type: string
+          example: /api/v1/assets/KMJ-ZAR-HTM-L
+        price: 
+          type: number
+          minimum: 0.01
+          format: double
+          example: 1500.00
+    RemoveProductBySkuRequest:
+      type: object
+      required:
+        - sku
+      properties:
+        sku:
+          type: string
+          example: KMJ-ZAR-HTM-L
+
+    CatalogProductResponse:
+      type: object 
+      properties: 
+        id: 
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        name:
+          type: string
+          example: laptop
+        sku:
+          type: string
+          example: KMJ-ZAR-HTM-L
+        description:
+          type: string
+          example: laptop gaming
+        price: 
+          type: number
+          format: double
+          example: 12.12
+        photo: 
+          type: string
+          example: /api/v1/assets/{sku}

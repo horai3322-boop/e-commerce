@@ -7,22 +7,20 @@ import org.springframework.stereotype.Service;
 import com.lawlayui.e_commerce.product_catalog.application.mapper.ProductMapping;
 import com.lawlayui.e_commerce.product_catalog.application.port.in.ProductDto;
 import com.lawlayui.e_commerce.product_catalog.application.port.in.SearchProductQuery;
-import com.lawlayui.e_commerce.product_catalog.application.port.in.SearchProductUseCase;
 import com.lawlayui.e_commerce.product_catalog.application.port.out.ProductCatalogRepository;
 
 @Service
-public class SearchProductUseCaseImpl implements SearchProductUseCase {
+public class SearchProductUseCase{
     private final ProductCatalogRepository productRepository;
     private final ProductMapping productMapping;
 
-    public SearchProductUseCaseImpl(ProductCatalogRepository productRepository, ProductMapping productMapping) {
+    public SearchProductUseCase(ProductCatalogRepository productRepository, ProductMapping productMapping) {
         this.productRepository = productRepository;
         this.productMapping = productMapping;
     }
 
-    @Override
     public List<ProductDto> execute(SearchProductQuery query) {
-        return productMapping.toDtoList(productRepository.getAll(query.page(), query.pageSize(), query.searchKey()));
+        return productMapping.toDtoList(productRepository.getAll(query.page(), query.pageSize(), "%" + query.searchKey().trim() + "%"));
     }
     
 }

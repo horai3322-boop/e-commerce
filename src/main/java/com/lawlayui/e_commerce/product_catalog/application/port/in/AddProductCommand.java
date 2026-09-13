@@ -1,33 +1,43 @@
 package com.lawlayui.e_commerce.product_catalog.application.port.in;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
-import com.lawlayui.e_commerce.product_catalog.application.exception.ProductDataEmptyException;
-import com.lawlayui.e_commerce.product_catalog.application.exception.ProductLengthException;
-import com.lawlayui.e_commerce.product_catalog.application.exception.ProductPriceZeroException;
-
-public record AddProductCommand(String name, String descirption, BigDecimal price, String file_path, String sku) {
+public record AddProductCommand(
+    String name, 
+    String description, 
+    BigDecimal price, 
+    String photo, 
+    String sku
+) {
     public AddProductCommand {
-        if (sku.isEmpty()) {
-            throw new ProductDataEmptyException("sku");
+        Objects.requireNonNull(name, "Name cannot be null");
+        Objects.requireNonNull(description, "description cannot be null");
+        Objects.requireNonNull(price, "Price cannot be null");
+        Objects.requireNonNull(photo, "Photo cannot be null");
+        Objects.requireNonNull(sku, "SKU cannot be null");
+
+        if (name.isBlank()) {
+            throw new IllegalArgumentException("Name cannot be blank");
         }
-        if (name.length() < 3) {
-            throw new ProductLengthException(255, 3, "name");
+        if (name.length() < 3 || name.length() > 255) {
+            throw new IllegalArgumentException("The character name must be between 3 and 255 characters long");
         }
-        if (name.isEmpty()) {
-            throw new ProductDataEmptyException("name");
+        if (description.isBlank()) {
+            throw new IllegalArgumentException("description cannot be blank");
         }
-        if (descirption.length() < 50) {
-            throw new ProductLengthException(255, 50, "description");
+        if (description.length() < 50 || description.length() > 1000) {
+            throw new IllegalArgumentException("The character description must be between 50 and 1000 characters long");
         }
-        if (descirption.isEmpty()) {
-            throw new ProductDataEmptyException("description");
+        if (photo.isBlank()) {
+            throw new IllegalArgumentException("Photo cannot be blank");
         }
-        if (price.compareTo(BigDecimal.ZERO) == 0) {
-            throw new ProductPriceZeroException();
+        if (sku.isBlank()) {
+            throw new IllegalArgumentException("SKU cannot be blank");
         }
-        if (file_path.isEmpty()) {
-            throw new ProductDataEmptyException("file_path");
+
+        if (price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Price cannot be negative");
         }
-    }   
+    }
 }

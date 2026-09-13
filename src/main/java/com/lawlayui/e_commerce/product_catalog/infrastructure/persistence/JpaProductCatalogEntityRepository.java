@@ -10,10 +10,12 @@ import org.springframework.data.repository.query.Param;
 
 public interface JpaProductCatalogEntityRepository extends JpaRepository<ProductCatalogJpaEntity, String> {
     @Query("SELECT p FROM ProductCatalogJpaEntity p WHERE " +
-       "LOWER(p.productName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-       "LOWER(p.productDescription) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-       "LOWER(p.status) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+       "LOWER(p.productName) LIKE LOWER(:keyword) OR " +
+       "LOWER(p.productDescription) LIKE LOWER(:keyword) OR " +
+       "LOWER(p.status) LIKE LOWER(:keyword)")
     Page<ProductCatalogJpaEntity> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
-    Optional<ProductCatalogJpaEntity> findByProductSku(String sku);
+    boolean existsBySku(String sku);
+
+    Optional<ProductCatalogJpaEntity> findBySku(String sku);
 }

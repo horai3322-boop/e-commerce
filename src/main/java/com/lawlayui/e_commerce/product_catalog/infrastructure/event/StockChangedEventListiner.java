@@ -4,7 +4,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import com.lawlayui.e_commerce.product_catalog.application.port.in.ChangeCatalogStatusCommand;
-import com.lawlayui.e_commerce.product_catalog.application.port.in.ChangeCatalogStatusUseCase;
+import com.lawlayui.e_commerce.product_catalog.application.service.ChangeCatalogStatusUseCase;
 import com.lawlayui.e_commerce.product_inventory.application.event.StockDeductedEvent;
 
 @Component 
