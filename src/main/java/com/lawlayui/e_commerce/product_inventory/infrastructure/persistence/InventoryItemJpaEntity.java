@@ -51,9 +51,9 @@ public class InventoryItemJpaEntity {
     @Column(nullable = false, unique = true, length = 255)
     private String sku;
     @Column(name = "available_quantity", nullable = false)
-    private int availableStock;
+    private Integer availableStock;
     @Column(name = "reserved_quantity", nullable = false)
-    private int reservedStock;
+    private Integer reservedStock;
     @Column(name = "location_code", nullable = false)
     private String locationCode;
 }

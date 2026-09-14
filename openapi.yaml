@@ -135,7 +135,6 @@ paths:
             application/json: 
               schema: 
                 $ref: '#/components/schemas/ErrorResponse'
-
     delete: 
       summary: Delete a product by SKU 
       operationId: deleteProductBySku
@@ -157,8 +156,135 @@ paths:
               schema: 
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/v1/products/inventory/{sku}:
+    get:
+      summary: Get inventory item 
+      operationId: getInventoryItemBySku
+      parameters: 
+      - name: sku 
+        in: path 
+        required: true 
+        description: Unique identifier for inventory item 
+        schema: 
+          type: string 
+          example: KMJ-ZAR-HTM-L 
+      responses: 
+        '200':
+          description: Success get inventory item 
+          content:
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/InventoryItemResponse'
+        '404':
+          description: Inventory item not found 
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/products/inventory/{sku}/relocate-stock:
+    patch: 
+      summary: Relocate stock 
+      operationId: relocateStock 
+      security:
+        - BearerAuth: []
+      requestBody: 
+        required: true 
+        content: 
+          application/json: 
+            schema:    
+              $ref: '#/components/schemas/RelocateStockRequest'
+      parameters:
+      - name: sku 
+        in: path 
+        required: true 
+        description: Unqiue identifier for inventory item 
+        schema: 
+          type: string 
+          example: KMJ-ZAR-HTM-L 
+      responses: 
+        '204':
+          description: Success relocate inventory item 
+          content:
+            application/json: 
+              schema: 
+        '404':
+          description: Inventory item not found 
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/products/inventory/{sku}/replenish-stock:
+    patch: 
+      summary: replenish stock 
+      operationId: replenishStock 
+      security:
+        - BearerAuth: []
+      requestBody: 
+        required: true 
+        content: 
+          application/json: 
+            schema:    
+              $ref: '#/components/schemas/ReplenishStockRequest'
+      parameters:
+      - name: sku 
+        in: path 
+        required: true 
+        description: Unqiue identifier for inventory item 
+        schema: 
+          type: string 
+          example: KMJ-ZAR-HTM-L 
+      responses: 
+        '204':
+          description: Success replenish inventory item 
+          content:
+            application/json: 
+              schema: 
+        '404':
+          description: Inventory item not found 
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+      
+
 components:
   schemas:
+    RelocateStockRequest:
+      type: object 
+      requried: 
+        - newLocationCode
+      properties:
+        sku: 
+          type: string 
+          example: KMJ-ZAR-HTM-L 
+        newLocationCode:
+          type: string 
+          example: WH1-A-04-3-12
+    ReplenishStockRequest:
+      type: object 
+      reuired: 
+        - quantitiy 
+      properties:
+        quantitiy: 
+          type: number 
+          example: 12 
+        sku: 
+          type: string 
+          example: KMJ-ZAR-HTM-L    
+    InventoryItemResponse:
+      type: object
+      properties: 
+        sku: 
+          type: string 
+          example: KMJ-ZAR-HTM-L
+        quantitiy: 
+          type: number 
+          example: 12
+        locationCode:
+          type: string 
+          example: WH1-A-04-3-12
     AddProductRequest:
       type: object 
       required: 

@@ -24,6 +24,8 @@ public class GetInventoryItemImpl implements  GetInventoryItemUseCase {
     public InventoryItemDto execute(GetInventoryItemQuery query) {
         InventoryItem inventoryItem = inventoryRepository.findBySKU(query.sku())
                 .orElseThrow(() -> new InventoryItemNotFound(query.sku()));
+        System.out.println("===== INVENTORY ITEM SKU: " + inventoryItem.getSku().value() + " =====");
+        System.out.println("===== INVENTORY ITEM LOCATION CODE: " + inventoryItem.getLocationCode().value() + " =====");
         return inventoryItemMapping.toDto(inventoryItem);
     }
 }

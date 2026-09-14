@@ -2,13 +2,13 @@ package com.lawlayui.e_commerce.product_catalog.infrastructure.web;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.lawlayui.e_commerce.product_catalog.application.exception.CatalogNotFoundException;
 import com.lawlayui.e_commerce.product_catalog.application.port.in.ErrorDto;
 
-@ControllerAdvice
+@RestControllerAdvice(basePackages = "com.lawlayui.e_commerce.product_catalog")
 public class ProductCatalogGlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorDto> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {

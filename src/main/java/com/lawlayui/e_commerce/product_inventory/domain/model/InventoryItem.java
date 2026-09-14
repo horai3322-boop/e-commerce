@@ -13,6 +13,15 @@ public class InventoryItem {
     private StockQuantitiy reservedStock;
     private LocationCode locationCode;
 
+    public InventoryItem() {}
+    public InventoryItem(InventoryItemId id, SKU sku, StockQuantitiy availableQuantitiy, StockQuantitiy reservedStock, LocationCode locationCode) {
+        this.id = id; 
+        this.sku = sku; 
+        this.availableStock = availableQuantitiy;
+        this.reservedStock =reservedStock;
+        this.locationCode = locationCode;
+    }
+
     public static InventoryItem create(InventoryItemId id, SKU sku, StockQuantitiy availableStock, LocationCode locationCode) {
         InventoryItem inventoryItem = new InventoryItem();
         if (id == null) {

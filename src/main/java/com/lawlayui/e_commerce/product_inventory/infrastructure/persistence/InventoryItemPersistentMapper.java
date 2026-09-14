@@ -12,13 +12,28 @@ import com.lawlayui.e_commerce.product_inventory.domain.value_object.StockQuanti
 
 @Mapper(componentModel = "spring")
 public interface InventoryItemPersistentMapper {
+
     @Mapping(source = "id", target = "id", qualifiedByName = "mapInventoryItemIdToString")
     @Mapping(source = "sku", target = "sku", qualifiedByName = "mapSKUtoString")
     @Mapping(source = "availableStock", target = "availableStock", qualifiedByName = "mapStockQuantityToInteger")
     @Mapping(source = "reservedStock", target = "reservedStock", qualifiedByName = "mapStockQuantityToInteger")
     @Mapping(source = "locationCode", target = "locationCode", qualifiedByName = "mapLocationCodeToString")
     InventoryItemJpaEntity toEntity(InventoryItem inventoryItem);
-    InventoryItem toDomain(InventoryItemJpaEntity entity);
+
+    default InventoryItem toDomain(InventoryItemJpaEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        return new InventoryItem(
+            entity.getId() != null ? new InventoryItemId(entity.getId()) : null,
+            entity.getSku() != null ? new SKU(entity.getSku()) : null,
+            new StockQuantitiy(entity.getAvailableStock()),
+            new StockQuantitiy(entity.getReservedStock()),
+            entity.getLocationCode() != null ? new LocationCode(entity.getLocationCode()) : null
+        );
+    }
+
 
     @Named("mapInventoryItemIdToString")
     default String mapInventoryItemIdToString(InventoryItemId inventoryItemId) {

@@ -3,6 +3,8 @@ package com.lawlayui.e_commerce.product_inventory.infrastructure.web;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,21 +31,21 @@ public class InventoryController {
     } 
         
 
-    @GetMapping()
-    public ResponseEntity<InventoryItemDto> getInventoryItem(String sku) {
+    @GetMapping
+    public ResponseEntity<InventoryItemDto> getInventoryItem(@PathVariable String sku) {
         InventoryItemDto inventoryItemDto = getInventoryItemUseCase.execute(new GetInventoryItemQuery(sku));
         return ResponseEntity.ok(inventoryItemDto);
     }
 
     @PatchMapping("/relocate-stock")
-    public ResponseEntity<?> relocateStock(String sku, String newLocationCode) {
-        relocateStockUseCase.execute(new RelocateStockCommand(sku, newLocationCode));
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> relocateStock(@PathVariable String sku, @RequestBody RelocateStockCommand command) {
+        relocateStockUseCase.execute(new RelocateStockCommand(sku, command.newLocationCode()));
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/replenish-stock")
-    public ResponseEntity<?> replenishStock(String sku, int quantity) {
-        replenishStockUseCase.execute(new ReplenishStockCommand(sku, quantity));
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> replenishStock(@PathVariable String sku, @RequestBody ReplenishStockCommand command) {
+        replenishStockUseCase.execute(new ReplenishStockCommand(sku, command.quantity()));
+        return ResponseEntity.noContent().build();
     }
 }
